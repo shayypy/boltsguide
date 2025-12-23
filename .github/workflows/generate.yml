@@ -19,7 +19,7 @@ jobs:
         # Thanks https://gist.github.com/swinton/03e84635b45c78353b1f71e41007fc7c
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REPO: ${{ github.event.repository.owner }}/${{ github.event.repository.name }}
+          REPO: ${{ github.event.repository }}
           FILE_TO_COMMIT: guide.xml
           DESTINATION_BRANCH: main
         run: |
