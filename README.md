@@ -29,23 +29,23 @@ This assumes you are using a program such as Dispatcharr or xTeVe/Threadfin (ahe
 ### Dispatcharr
 
 1. Add your stream source if you haven't already
-  - Go to M3U & EPG Manager
-  - Add your HDHomeRun's (or similar device) M3U playlist URL. On HDHR devices, this is available at `lineup.m3u` under the device's IP.
+    - Go to M3U & EPG Manager
+    - Add your HDHomeRun's (or similar device) M3U playlist URL. On HDHR devices, this is available at `lineup.m3u` under the device's IP.
 
 ![](images/dispatcharr-add-m3u.png)
 
 2. Add the guide
-  - Still in M3U & EPG Manager, click Add EPG -> Standard EPG Source
-  - Add the direct link to the guide file and set the source type as XMLTV
-    - https://github.com/shayypy/boltsguide/raw/refs/heads/main/guide.xml
+    - Still in M3U & EPG Manager, click Add EPG -> Standard EPG Source
+    - Add the direct link to the guide file and set the source type as XMLTV
+        - https://github.com/shayypy/boltsguide/raw/refs/heads/main/guide.xml
 
 ![](images/dispatcharr-add-epg.png)
 
 3. Create a channel
-  - Go to the Channels tab and locate "HDHR" (or whatever you named the M3U source) on the right panel
-  - Click the plus button to add it as a new channel
-  - Number assignment is up to your personal preference and how you have configured Dispatcharr. If you don't know, just choose "auto-assign next available"
-  - Edit the channel and match it to the EPG that you added in the previous step. To do this, find the box at the bottom right, select the source ("bolts" in my example), then click on the only channel that shows up (`Tampa Bay Lightning on The Spot (the-spot-tbl)`). Use the TVG-ID from the EPG (right panel) and configure the name and logo however you want.
+    - Go to the Channels tab and locate "HDHR" (or whatever you named the M3U source) on the right panel
+    - Click the plus button to add it as a new channel
+    - Number assignment is up to your personal preference and how you have configured Dispatcharr. If you don't know, just choose "auto-assign next available"
+    - Edit the channel and match it to the EPG that you added in the previous step. To do this, find the box at the bottom right, select the source ("bolts" in my example), then click on the only channel that shows up (`Tampa Bay Lightning on The Spot (the-spot-tbl)`). Use the TVG-ID from the EPG (right panel) and configure the name and logo however you want.
 
 ![](images/dispatcharr-create-channel.png)
 
