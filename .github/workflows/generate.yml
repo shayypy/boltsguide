@@ -14,7 +14,9 @@ jobs:
         with:
           bun-version: 1.2.21
       - name: Run generation script
-        run: bun index.ts
+        run: |
+          bun index.ts
+          git add guide.xml
       - name: Commit guide
         uses: qoomon/actions--create-commit@v1
         with:
