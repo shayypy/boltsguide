@@ -127,7 +127,6 @@ for (const programme of programmes) {
   const hourIncrementsNum = Math.ceil((nextStart - lastStop) / 3_600_000);
   if (hourIncrementsNum < 12) continue;
 
-  console.log(nextStart - lastStop, hourIncrementsNum);
   for (const incr of new Array(hourIncrementsNum)
     .fill(undefined)
     .map((_, i) => i)) {
