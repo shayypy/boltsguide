@@ -16,18 +16,8 @@ jobs:
       - name: Run generation script
         run: bun index.ts
       - name: Commit guide
-        # Thanks https://gist.github.com/swinton/03e84635b45c78353b1f71e41007fc7c
-        # and https://gist.github.com/swinton/03e84635b45c78353b1f71e41007fc7c?permalink_comment_id=4218584#gistcomment-4218584
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          FILE_TO_COMMIT: guide.xml
-          DESTINATION_BRANCH: main
-        run: |
-          export TODAY=$( date -u '+%Y-%m-%d' )
-          export MESSAGE="chore: regenerate $FILE_TO_COMMIT for $TODAY"
-          export SHA=$( git rev-parse $DESTINATION_BRANCH:$FILE_TO_COMMIT )
-          gh api --method PUT /repos/${{ github.event.repository.full_name }}/contents/$FILE_TO_COMMIT \
-            --field message="$MESSAGE" \
-            --field content=@<( base64 -i $FILE_TO_COMMIT )> \
-            --field branch="$DESTINATION_BRANCH" \
-            --field sha="$SHA"
+        uses: qoomon/actions--create-commit@v1
+        with:
+          message: "chore: generate guide"
+          skip-empty: true
+      - run: git push
