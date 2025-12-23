@@ -17,17 +17,19 @@ jobs:
         run: bun index.ts
       - name: Commit guide
         # Thanks https://gist.github.com/swinton/03e84635b45c78353b1f71e41007fc7c
-        run: |
-          export CONTENT=$( base64 -i $FILE )
-          export SHA=$( git rev-parse $BRANCH:$FILE )
-          gh api --method PUT /repos/$REPO/contents/$FILE \
-            --field message="chore: generate guide for $( date -u '+%Y-%m-%d' )" \
-            --field content="$CONTENT" \
-            --field encoding="base64" \
-            --field branch="$BRANCH" \
-            --field sha="$SHA"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.event.repository.owner }}/${{ github.event.repository.name }}
-          BRANCH: main
-          FILE: guide.xml
+          FILE_TO_COMMIT: guide.xml
+          DESTINATION_BRANCH: main
+        run: |
+          export TODAY=$( date -u '+%Y-%m-%d' )
+          export MESSAGE="chore: regenerate $FILE_TO_COMMIT for $TODAY"
+          export SHA=$( git rev-parse $DESTINATION_BRANCH:$FILE_TO_COMMIT )
+          export CONTENT=$( base64 -i $FILE_TO_COMMIT )
+          gh api --method PUT /repos/$REPO/contents/$FILE_TO_COMMIT \
+            --field message="$MESSAGE" \
+            --field content="$CONTENT" \
+            --field encoding="base64" \
+            --field branch="$DESTINATION_BRANCH" \
+            --field sha="$SHA"
