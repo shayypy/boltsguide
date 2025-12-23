@@ -16,8 +16,18 @@ jobs:
       - name: Run generation script
         run: bun index.ts
       - name: Commit guide
+        # Thanks https://gist.github.com/swinton/03e84635b45c78353b1f71e41007fc7c
         run: |
-          git config --global user.name 'shay'
-          git config --global user.email 'shayypy@users.noreply.github.com'
-          git commit -am "feat: generate guide"
-          git push
+          export CONTENT=$( base64 -i $FILE )
+          export SHA=$( git rev-parse $BRANCH:$FILE )
+          gh api --method PUT /repos/$REPO/contents/$FILE \
+            --field message="chore: generate guide for $( date -u '+%Y-%m-%d' )" \
+            --field content="$CONTENT" \
+            --field encoding="base64" \
+            --field branch="$BRANCH" \
+            --field sha="$SHA"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.event.repository.owner }}/${{ github.event.repository.name }}
+          BRANCH: main
+          FILE: guide.xml
