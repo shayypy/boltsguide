@@ -1,0 +1,22 @@
+name: Generate Guide
+on:
+  schedule:
+    - cron: '0 0 * * 0'
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        name: Set up Bun
+        with:
+          bun-version: 1.2.21
+      - name: Run generation script
+        run: bun index.ts
+      - name: Commit guide
+        run: |
+          git config --global user.name 'shay'
+          git config --global user.email 'shayypy@users.noreply.github.com'
+          git commit -am "feat: generate guide"
+          git push
