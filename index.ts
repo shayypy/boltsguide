@@ -4,6 +4,7 @@ import {
   type XmltvEpisodeNumber,
   type XmltvProgramme,
 } from "@iptv/xmltv";
+import parse from "csv-simple-parser";
 
 // Grab schedule for 1 day early. Not much reason to do this other than that
 // it might pick up a game otherwise missed if perhaps this was generated at
@@ -22,6 +23,36 @@ const xmltv: Xmltv = {
   ],
   programmes: [],
 };
+
+const csvGames: {
+  date: string;
+  home: string;
+  away: string;
+  posterUrl?: string;
+  thumbUrl?: string;
+}[] = [];
+try {
+  const csv = await Bun.file("images/schedule.csv").text();
+  const parsedCsv = parse(csv, { header: true });
+  for (const row of parsedCsv) {
+    if (Array.isArray(row)) continue;
+    const item = row as Record<string, string>;
+    const game: (typeof csvGames)[number] = {
+      date: item.dateEvent ?? "",
+      home: item["Home Team"] ?? "",
+      away: item["Away Team"] ?? "",
+      posterUrl: item.Poster || undefined,
+      thumbUrl: item.Thumb || undefined,
+    };
+
+    csvGames.push(game);
+  }
+} catch (e) {
+  console.error(e);
+}
+
+const imageUrl = (filename: string) =>
+  `https://github.com/shayypy/boltsguide/raw/refs/heads/main/images/${filename}`;
 
 let weeks = 2;
 let nextDate = firstDate.toISOString().split("T")[0];
@@ -64,8 +95,8 @@ while (weeks > 0) {
       const programme: XmltvProgramme = {
         channel: channelId,
         title: [
-          { _value: "Tampa Bay Lightning", lang: "en" },
           { _value: "Lightning de Tampa Bay", lang: "fr" },
+          { _value: "Tampa Bay Lightning", lang: "en" },
         ],
         subTitle: [
           {
@@ -83,6 +114,14 @@ while (weeks > 0) {
           {
             _value: `S${seasonYear}E${gameNumber}`,
             system: "onscreen",
+          },
+        ],
+        image: [
+          {
+            _value: imageUrl("tbl-poster.png"),
+            orient: "P",
+            type: "poster",
+            size: 3,
           },
         ],
         start: new Date(startTime),
@@ -103,6 +142,31 @@ while (weeks > 0) {
         ];
         programme.icon = [{ src: opponent.darkLogo }];
       }
+
+      const awayName = `${game.awayTeam.placeName.default} ${game.awayTeam.commonName.default}`;
+      const homeName = `${game.homeTeam.placeName.default} ${game.homeTeam.commonName.default}`;
+      const csvItem =
+        csvGames.find((g) => g.away === awayName && g.home === homeName) ??
+        // Fall back to reversed matchup if none found
+        csvGames.find((g) => g.away === homeName && g.home === awayName);
+
+      if (csvItem?.thumbUrl) {
+        programme.image?.push({
+          _value: csvItem.thumbUrl,
+          orient: "L",
+          type: "still",
+        });
+      }
+      // Require date match because poster items seem to usually be for
+      // special events. For thumbs, we only care about the matchup
+      if (csvItem?.posterUrl && csvItem.date === day.date) {
+        programme.image?.push({
+          _value: csvItem.posterUrl,
+          orient: "P",
+          type: "poster",
+        });
+      }
+
       xmltv.programmes?.push(programme);
     }
   }
@@ -146,10 +210,15 @@ for (const programme of programmes) {
       ],
       image: [
         {
-          _value:
-            "https://github.com/shayypy/boltsguide/raw/refs/heads/main/images/vasy.jpg",
+          _value: imageUrl("vasy.jpg"),
           orient: "L",
           type: "backdrop",
+        },
+        {
+          _value: imageUrl("tbl-poster.png"),
+          orient: "P",
+          type: "poster",
+          size: 3,
         },
       ],
       start: new Date(lastStop + incr * 3600000),

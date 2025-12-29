@@ -50,3 +50,7 @@ This assumes you are using a program such as Dispatcharr or xTeVe/Threadfin (ahe
 ![](images/dispatcharr-create-channel.png)
 
 This setup allows me to keep the local channel's original guide as well as a duplicate channel entry just for the games, since I have my HDHR added as a separate device from Dispatcharr in Plex. If you are running your HDHR through Dispatcharr already and you wish to retain the original guide, you may have to duplicate your HDHR M3U listing so that you can create a separate Dispatcharr channel.
+
+## Images
+
+In order to avoid spoiling game scores with auto-generated thumbnails, I opted to try to include banners with each episode. These are provided by [thesportsdb.com](https://www.thesportsdb.com/season/4380-nhl/2025-2026&t=134836) via a per-season CSV file stored in the images directory. I found their API to be a bit unwarranted for my purposes - instead I devised the current solution, which requires zero automated requests (or one per game if you think the client loading an image counts as automated). The downside is that the CSV file must be replaced each season.

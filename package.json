@@ -11,6 +11,7 @@
     "typescript": "^5"
   },
   "dependencies": {
-    "@iptv/xmltv": "^1.0.1"
+    "@iptv/xmltv": "^1.0.1",
+    "csv-simple-parser": "^2.0.2"
   }
 }
